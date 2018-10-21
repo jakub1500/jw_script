@@ -41,8 +41,10 @@ function print_banner() {
 function show_main_menu(){
 	echo -e "\033[u"
 	echo "**************** MENU ****************"
-	echo "1) Add aliases to .bashrc"
-	echo "2) Print credits."
+	echo "1) Add aliases to .bashrc."
+	echo "2) Update aliases in .bashrc."
+	echo "3) Print aliases."
+	echo "4) Print credits."
 	echo
 	echo "EXIT --> type exit or q"
 	echo "**************************************"
@@ -93,8 +95,28 @@ function add_aliases() {
 	echo "Aliases added properly."
 }
 
+function update_aliases() {
+	if [ ! -f $SRC_DIR/jw_aliases ]; then
+		echo "Could not find aliases file, try add them first"
+		return
+	fi
+	cp $SCRIPT_DIR/jw_aliases $SRC_DIR
+	echo "Aliases updated properly"
+}
+
+function print_aliases() {
+	if [ ! -f $SCRIPT_DIR/jw_aliases ]; then
+		echo "Could not find aliases file inside repo"
+		return
+	fi
+	echo
+	cat $SCRIPT_DIR/jw_aliases
+	echo
+}
 function print_credits() {
+	echo;echo
 	echo "source by JW."
+	echo;echo
 }
 
 function main_loop() {
@@ -108,6 +130,10 @@ function main_loop() {
 		"1")
 			add_aliases	;;
 		"2")
+			update_aliases	;;
+		"3")
+			print_aliases	;;
+		"4")
 			print_credits	;;
 		"exit" | "q")
 			break	;;

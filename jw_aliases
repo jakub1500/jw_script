@@ -1,3 +1,8 @@
+#git aliases
 alias gitadog='git log --all --decorate --oneline --graph'
 alias gs='git status'
 alias gcan='git commit --amend --no-edit'
+alias gai='git add -i'
+
+#standard aliases
+alias c='cd ..'
