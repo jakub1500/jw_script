@@ -6,3 +6,4 @@ alias gai='git add -i'
 
 #standard aliases
 alias c='cd ..'
+alias duthis='du -h --max-depth=1'
