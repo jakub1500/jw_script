@@ -6,3 +6,5 @@ alias gai='git add -i'
 
 #standard aliases
 alias c='cd ..'
+
+#tip add ZSH_THEME=re5et on top of /usr/share/oh-my-zsh/oh-my-zsh.sh
