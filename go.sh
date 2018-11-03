@@ -42,9 +42,10 @@ function show_main_menu(){
 	echo -e "\033[u"
 	echo "**************** MENU ****************"
 	echo "1) Add aliases to .bashrc."
-	echo "2) Update aliases in .bashrc."
-	echo "3) Print aliases."
-	echo "4) Print credits."
+	echo "2) Update aliases"
+	echo "3) Add aliasec to .zshrc."
+	echo "4) Print aliases."
+	echo "5) Print credits."
 	echo
 	echo "EXIT --> type exit or q"
 	echo "**************************************"
@@ -83,15 +84,32 @@ usage() {
 	exit 1
 }
 
+# $1 .zshrc = 0 / .bashrc = 1
 function add_aliases() {
-	if [ -d $SRC_DIR ]; then
+	local grepped_string
+	local pattern="source /home/jakub/.jw_script/jw_aliases"
+	local file
+	local isAdded=1
+	
+	if [ $1 == 0 ]; then
+		file=".zshrc"
+	elif [ $1 == 1 ]; then
+		file=".bashrc"
+	else
+		return 1 #in case wrong $1 
+	fi
+	grepped_string=$(grep "$pattern" $HOME/$file)
+
+	if [[ -n $grepped_string ]]; then
 		echo "Aliases already added."
 		return
 	fi
 
-	mkdir $SRC_DIR
-	cp $SCRIPT_DIR/jw_aliases $SRC_DIR
-	echo "source $SRC_DIR/jw_aliases" >> $HOME/.bashrc
+	if [[ ! -d $SRC_DIR ]]; then
+		mkdir $SRC_DIR
+		cp $SCRIPT_DIR/jw_aliases $SRC_DIR
+	fi
+	echo "source $SRC_DIR/jw_aliases" >> $HOME/$file
 	echo "Aliases added properly."
 }
 
@@ -128,12 +146,14 @@ function main_loop() {
 
 		case "$opt" in
 		"1")
-			add_aliases	;;
+			add_aliases 1	;;
 		"2")
 			update_aliases	;;
 		"3")
-			print_aliases	;;
+			add_aliases 0	;;
 		"4")
+			print_aliases	;;
+		"5")
 			print_credits	;;
 		"exit" | "q")
 			break	;;
@@ -152,14 +172,18 @@ declare BASH_VERSION
 declare TERM_VALUE
 declare ANIMATED_INTRO
 declare VERBOSE=0
+declare DEBUG=0
 declare SCRIPT_VERSION=v0.1
 declare SRC_DIR="$HOME/.jw_script"
 
-while getopts ":v" o; do
+while getopts ":v:d" o; do
     case "${o}" in
         v)
             VERBOSE=1
             ;;
+		d)
+			DEBUG=1
+			;;
         *)
             usage
             ;;
