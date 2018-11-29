@@ -3,10 +3,29 @@ alias gitadog='git log --all --decorate --oneline --graph'
 alias gs='git status'
 alias gcan='git commit --amend --no-edit'
 alias gai='git add -i'
+alias gf='git fetch'
+alias gcom='git checkout origin/master'
+alias gp='git push'
+alias grc='git rebase --continue'
+alias ll='ls -l'
+alias ml='xrandr --output HDMI2 --auto --output eDP1 --auto --right-of HDMI2'
 
 #standard aliases
 alias c='cd ..'
 alias duthis='du -ahd 1'
 alias sn='shutdown now'
+alias so='source ~/.bashrc'
 
 #tip add ZSH_THEME=re5et on top of /usr/share/oh-my-zsh/oh-my-zsh.sh
+
+DIR=$HOME/repos/jw_script
+function addAlias () {
+	dest=$DIR/jw_aliases
+	echo "alias $1" >> $dest
+}
+
+function runjw () {
+	bash $DIR/go.sh -s
+}
+
+alias cdjw='cd $DIR'

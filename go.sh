@@ -5,30 +5,30 @@
 function print_banner_one() {
 	local ver=$SCRIPT_VERSION
 	local spc
-	local tm=$2
-	for (( i=1; $i <= $1; i++ )) ; do
+	local tm="$2"
+	for (( i=1; i <= $1; i++ )) ; do
        spc+=" "
 	done
 
-	sleep $tm && echo "$spc    ____________                         ___"
-	sleep $tm && echo "$spc   (_______  \  \                       /  /"
-	sleep $tm && echo "$spc           \  \  \                     /  / "
-	sleep $tm && echo "$spc            \  \  \                   /  /  "
-	sleep $tm && echo "$spc             \  \  \       ___       /  /   "
-	sleep $tm && echo "$spc   JW script  \  \  \     /   \     /  /    "
-	sleep $tm && echo "$spc        $ver   \  \  \___/  _  \___/  /     "
-	sleep $tm && echo "$spc         _______\  \       / \       /      "
-	sleep $tm && echo "$spc        (___________\_____/   \_____/       "
-	sleep $tm && echo
+	sleep "$tm" && echo "$spc    ____________                         ___"
+	sleep "$tm" && echo "$spc   (_______  \\  \\                       /  /"
+	sleep "$tm" && echo "$spc           \\  \\  \\                     /  / "
+	sleep "$tm" && echo "$spc            \\  \\  \\                   /  /  "
+	sleep "$tm" && echo "$spc             \\  \\  \\       ___       /  /   "
+	sleep "$tm" && echo "$spc   JW script  \\  \\  \\     /   \\     /  /    "
+	sleep "$tm" && echo "$spc        $ver   \\  \\  \\___/  _  \\___/  /     "
+	sleep "$tm" && echo "$spc         _______\\  \\       / \\       /      "
+	sleep "$tm" && echo "$spc        (___________\\_____/   \\_____/       "
+	sleep "$tm" && echo
 
 }
 function print_banner() {
-	echo -e "\033[s"
+	echo -e "\\033[s"
 	if [[ $ANIMATED_INTRO == 1 ]]; then
-		echo -e "\033[u"
+		echo -e "\\033[u"
 		print_banner_one 0 0.15
-		for (( i=1; $i <= 20; i++ )) ; do
-			echo -e "\033[u"
+		for (( i=1; i <= 20; i++ )) ; do
+			echo -e "\\033[u"
 			print_banner_one $i 0
 			sleep 0.1
 		done 
@@ -39,7 +39,7 @@ function print_banner() {
 }
 
 function show_main_menu(){
-	echo -e "\033[u"
+	echo -e "\\033[u"
 	echo "**************** MENU ****************"
 	echo "1) Add aliases to .bashrc."
 	echo "2) Update aliases"
@@ -53,7 +53,7 @@ function show_main_menu(){
 
 
 function get_bash_version() {
-	BASH_VERSION=$(bash --version | grep bash | egrep -o "version\ (.*)\ " | cut -d " " -f2)
+	BASH_VERSION=$(bash --version | grep bash | grep -Eo "version\\ (.*)\\ " | cut -d " " -f2)
 }
 
 function get_directory() {
@@ -76,7 +76,7 @@ function get_info() {
 
 function wait_f() {
 	echo "Press --enter-- to continue"
-	read
+	read -r
 }
 
 usage() {
@@ -142,7 +142,7 @@ function main_loop() {
 	while true; do
 		clear
 		show_main_menu
-		read opt
+		read -r opt
 
 		case "$opt" in
 		"1")
@@ -170,19 +170,23 @@ function main_loop() {
 declare SCRIPT_DIR
 declare BASH_VERSION
 declare TERM_VALUE
-declare ANIMATED_INTRO
+declare ANIMATED_INTRO=0
 declare VERBOSE=0
 declare DEBUG=0
 declare SCRIPT_VERSION=v0.1
 declare SRC_DIR="$HOME/.jw_script"
+declare SKIP_INTRO=0
 
-while getopts ":v:d" o; do
+while getopts ":v:ds" o; do
     case "${o}" in
         v)
             VERBOSE=1
             ;;
 		d)
 			DEBUG=1
+			;;
+		s)
+			SKIP_INTRO=1
 			;;
         *)
             usage
@@ -193,7 +197,9 @@ done
 #setup stuff
 clear
 get_info
-print_banner
+if [[ $SKIP_INTRO -ne 1 ]]; then
+	print_banner
+fi
 
 #go into main loop
 main_loop
