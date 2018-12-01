@@ -8,7 +8,7 @@ alias gcom='git checkout origin/master'
 alias gp='git push'
 alias grc='git rebase --continue'
 alias ll='ls -l'
-alias ml='xrandr --output HDMI2 --auto --output eDP1 --auto --right-of HDMI2'
+alias ml='xrandr --output HDMI2 --auto --primary --output eDP1 --auto --right-of HDMI2'
 
 #standard aliases
 alias c='cd ..'

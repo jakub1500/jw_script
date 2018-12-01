@@ -89,7 +89,6 @@ function add_aliases() {
 	local grepped_string
 	local pattern="source /home/jakub/.jw_script/jw_aliases"
 	local file
-	local isAdded=1
 	
 	if [ $1 == 0 ]; then
 		file=".zshrc"
