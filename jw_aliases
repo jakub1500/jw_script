@@ -1,5 +1,5 @@
 #git aliases
-alias gitadog='git log --all --decorate --oneline --graph'
+alias gadog='git log --all --decorate --oneline --graph'
 alias gs='git status'
 alias gcan='git commit --amend --no-edit'
 alias gai='git add -i'
@@ -9,6 +9,7 @@ alias gp='git push'
 alias grc='git rebase --continue'
 alias ll='ls -l'
 alias ml='xrandr --output HDMI2 --auto --primary --output eDP1 --auto --right-of HDMI2'
+alias ta='tmux attach'
 
 #standard aliases
 alias c='cd ..'
@@ -28,4 +29,17 @@ function runjw () {
 	bash $DIR/go.sh -s
 }
 
+function ao () {
+	pacmd set-default-sink $1
+}
 alias cdjw='cd $DIR'
+
+function tl () {
+	str=$(translate $1 -s en -d pl | grep -E "\[pl\]")
+	len=${#str}-5
+	trans="$1 --- ${str:5:len}"
+	echo $trans
+	if [[ $2 != "-k" ]]; then
+		echo $trans >> $HOME/translated
+	fi
+}
