@@ -43,3 +43,7 @@ function tl () {
 		echo $trans >> $HOME/translated
 	fi
 }
+
+function rb () {
+	$1 1>/dev/null 2>&1 &
+}
