@@ -1,0 +1,51 @@
+function gadog
+	git log --all --decorate --oneline --graph
+end
+function gs
+	git status
+end
+function gcan
+	git commit --amend --no-edit
+end
+function gai
+	git add -i
+end
+function gf
+	git fetch
+end
+function gcom
+	git checkout origin/master
+end
+function gp
+	git push
+end
+function grc
+	git rebase --continue
+end
+function ll
+	ls -l
+end
+function ml
+	xrandr --output HDMI2 --auto --primary --output eDP1 --auto --right-of HDMI2
+end
+function ta
+	tmux attach
+end
+function gcb
+	git checkout -b
+end
+function c
+	cd ..
+end
+function duthis
+	du -ahd 1
+end
+function sn
+	shutdown now
+end
+function so
+	source ~/.bashrc
+end
+function cdjw
+	cd $DIR
+end

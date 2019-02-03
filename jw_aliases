@@ -10,6 +10,7 @@ alias grc='git rebase --continue'
 alias ll='ls -l'
 alias ml='xrandr --output HDMI2 --auto --primary --output eDP1 --auto --right-of HDMI2'
 alias ta='tmux attach'
+alias gcb='git checkout -b'
 
 #standard aliases
 alias c='cd ..'
