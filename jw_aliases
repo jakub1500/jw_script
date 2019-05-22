@@ -11,6 +11,12 @@ alias ll='ls -l'
 alias ml='xrandr --output HDMI2 --auto --primary --output eDP1 --auto --right-of HDMI2'
 alias ta='tmux attach'
 alias gcb='git checkout -b'
+alias p10='ssh pi@192.168.1.101 "/home/pi/init_gpio.sh -t 17 -s 0"'
+alias p11='ssh pi@192.168.1.101 "/home/pi/init_gpio.sh -t 17 -s 1"'
+
+alias sl1='pacmd set-default-sink 1'
+alias sl0='pacmd set-default-sink 0'
+
 
 #standard aliases
 alias c='cd ..'
