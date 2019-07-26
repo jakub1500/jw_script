@@ -173,7 +173,7 @@ declare ANIMATED_INTRO=0
 declare VERBOSE=0
 declare DEBUG=0
 declare SCRIPT_VERSION=v0.1
-declare SRC_DIR="$HOME/.jw_script"
+declare SRC_DIR="$HOME/repos/jw_script/"
 declare SKIP_INTRO=0
 
 while getopts ":v:ds" o; do

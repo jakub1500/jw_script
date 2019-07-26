@@ -54,3 +54,26 @@ function tl () {
 function rb () {
 	$1 1>/dev/null 2>&1 &
 }
+
+function dt() {
+	LINES_TO_GREP="Synaptics TrackPoint"
+	opt=$1
+	echo $opt
+	if [[ $opt != "0" ]] && [[ $opt != "1" ]]; then
+		echo "wrong argument b!itch, could be [0,1]"
+		return
+	fi
+	ids_to_disable=""
+	for line in $LINES_TO_GREP; do
+		id=$(xinput list | grep $line | grep -Eo "id=[[:digit:]]{2}" | grep -Eo "[[:digit:]]{2}")
+		ids_to_disable="$ids_to_disable $id"
+	done
+	if [[ $opt == "0" ]]; then
+		arg="--disable"
+	else
+		arg="--enable"
+	fi
+	for id in $ids_to_disable; do
+		xinput $arg $id
+	done
+}
