@@ -90,13 +90,7 @@ function add_aliases() {
 	local pattern="source /home/jakub/.jw_script/jw_aliases"
 	local file
 	
-	if [ $1 == 0 ]; then
-		file=".zshrc"
-	elif [ $1 == 1 ]; then
-		file=".bashrc"
-	else
-		return 1 #in case wrong $1 
-	fi
+	file=".bashrc"
 	grepped_string=$(grep "$pattern" $HOME/$file)
 
 	if [[ -n $grepped_string ]]; then
@@ -145,14 +139,12 @@ function main_loop() {
 
 		case "$opt" in
 		"1")
-			add_aliases 1	;;
+			add_aliases	;;
 		"2")
 			update_aliases	;;
 		"3")
-			add_aliases 0	;;
-		"4")
 			print_aliases	;;
-		"5")
+		"4")
 			print_credits	;;
 		"exit" | "q")
 			break	;;

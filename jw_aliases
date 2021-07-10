@@ -5,41 +5,37 @@ alias gcan='git commit --amend --no-edit'
 alias gai='git add -i'
 alias gf='git fetch'
 alias gcom='git checkout origin/master'
-alias gp='git push'
+alias grom='git rebase origin/master'
 alias grc='git rebase --continue'
-alias ll='ls -l'
-alias ml='xrandr --output HDMI2 --auto --primary --output eDP1 --auto --right-of HDMI2'
-alias ta='tmux attach'
 alias gcb='git checkout -b'
-alias p10='ssh pi@192.168.1.101 "/home/pi/init_gpio.sh -t 17 -s 0"'
-alias p11='ssh pi@192.168.1.101 "/home/pi/init_gpio.sh -t 17 -s 1"'
-
-alias sl1='pacmd set-default-sink 1'
-alias sl0='pacmd set-default-sink 0'
-
 
 #standard aliases
 alias c='cd ..'
 alias duthis='du -ahd 1'
 alias sn='shutdown now'
 alias so='source ~/.bashrc'
+alias ll='ls -l'
+alias ta='tmux attach'
+alias ssh='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 
-#tip add ZSH_THEME=re5et on top of /usr/share/oh-my-zsh/oh-my-zsh.sh
+_ALIASES_DIR=$(cd $(dirname $BASH_SOURCE) && pwd)
+_EXTRA_ALIASES="jw_aliases_extra"
+alias cdjw='cd $_ALIASES_DIR'
 
-DIR=$HOME/repos/jw_script
+MOZ_USE_XINPUT2=1  # enable touch scroll ff
 function addAlias () {
-	dest=$DIR/jw_aliases
+	dest=$_ALIASES_DIR/jw_aliases
 	echo "alias $1" >> $dest
 }
 
 function runjw () {
-	bash $DIR/go.sh -s
+	bash $_ALIASES_DIR/go.sh -s
 }
 
 function ao () {
 	pacmd set-default-sink $1
 }
-alias cdjw='cd $DIR'
+
 
 function tl () {
 	str=$(translate $1 -s en -d pl | grep -E "\[pl\]")
@@ -77,3 +73,90 @@ function dt() {
 		xinput $arg $id
 	done
 }
+
+function transme() {
+	TRANSLATE_DIR=${HOME}/jw_translations
+	word_to_translate=$1
+	file_name=`echo ${word_to_translate} | tr ' ' '_'`
+	mkdir -p ${TRANSLATE_DIR}
+	trans -s en -t pl "${word_to_translate}" | tee ${TRANSLATE_DIR}/${file_name}
+}
+
+function ptransme() {
+	for name in `ls ${HOME}/jw_translations`; do
+		echo "${name} ---> `tail -n 1 ${HOME}/jw_translations/${name}`"
+	done
+}
+
+function sshell() {
+	set -e
+	local SAFE_WORKSPACE_FILE_ENC="${HOME}/safe_ws.tar.gz.enc"
+	local SAFE_WORKSPACE=`mktemp -d`
+	local ENV=$'PS1=\e[31\;1mSAFE_SHELL\e[34m@\ \e[0m'
+	local SECRET
+	# DECRYPT sequence
+	clear
+	stty -echo  # disable typed characters
+	echo 'Tell me your secrets:';
+	read -r SECRET;
+	stty echo
+	if [[ -f "${SAFE_WORKSPACE_FILE_ENC}" ]]; then
+		openssl enc -aes-256-cbc -in ${SAFE_WORKSPACE_FILE_ENC} -d -pass pass:${SECRET} -pbkdf2 -iter 100000 | tar xz -C ${SAFE_WORKSPACE}
+	fi
+	CMDS="
+		${ENV};
+		set +o history;
+		clear;
+		cd ${SAFE_WORKSPACE}
+	"
+	bash --init-file <(echo "${CMDS}")
+	# END sequence
+	pushd ${SAFE_WORKSPACE} > /dev/null
+	if [[ -f "${SAFE_WORKSPACE}/.change-pass" ]]; then
+		rm "${SAFE_WORKSPACE}/.change-pass"
+		stty -echo
+		echo 'Tell me your new secret:';
+		read -r SECRET;
+		stty echo
+	fi
+	tar -cz * | openssl enc -aes-256-cbc -e -pass pass:${SECRET} -pbkdf2 -iter 100000 > ${SAFE_WORKSPACE_FILE_ENC}
+	popd > /dev/null
+	rm -rf $SAFE_WORKSPACE
+	set +e
+}
+
+function disablebeep() {
+	# works for xfce
+	xset b off
+}
+
+function pprog() {
+	echo "mpv test.mp3 --> program to play music in terminal"
+	echo "arecord -f cd test.mp3 --> record voice"
+	echo "trans -s en -t pl ass --> translate"
+}
+
+###########################
+# Deal with extra aliases #
+###########################
+function decrypt_extra_aliases() {
+	local pass
+	echo 'Extra aliases password:'
+	read -r pass
+	openssl enc -aes-256-cbc -in ${_ALIASES_DIR}/${_EXTRA_ALIASES}.enc -out ${_ALIASES_DIR}/${_EXTRA_ALIASES} -d -pass pass:${pass} -pbkdf2 -iter 100000
+}
+
+function encrypt_extra_aliases() {
+	local pass
+	echo 'Extra aliases password:'
+	read -r pass
+	openssl enc -aes-256-cbc -in ${_ALIASES_DIR}/${_EXTRA_ALIASES} -out ${_ALIASES_DIR}/${_EXTRA_ALIASES}.enc -e -pass pass:${pass} -pbkdf2 -iter 100000
+}
+
+function load_encrypted_aliases() {
+	if [[ -f ${_ALIASES_DIR}/${_EXTRA_ALIASES} ]]; then
+		source ${_ALIASES_DIR}/${_EXTRA_ALIASES}
+	fi
+}
+load_encrypted_aliases
+
